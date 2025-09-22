@@ -1,7 +1,7 @@
 declare global {
   type RootStackParamList = {
     home: undefined;
-    teste: undefined;
+    newMeal: undefined;
   };
 
   type StackRoutesProps<T extends keyof RootStackParamList> = {

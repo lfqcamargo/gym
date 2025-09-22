@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AppLayout } from "./layouts/AppLayout";
 import { Home } from "./screens/Home";
-import { Teste } from "./screens/Teste";
+import { NewMeal } from "./screens/NewMeal";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ export function Routes() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="teste" component={Teste} />
+        <Stack.Screen name="newMeal" component={NewMeal} />
       </Stack.Navigator>
     </AppLayout>
   );

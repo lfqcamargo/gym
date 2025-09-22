@@ -4,12 +4,17 @@ const baseStyles = createThemedStyles((theme) => ({
   container: {
     height: 48,
     width: "100%",
+    borderRadius: theme.border.borderRadius.xl,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
     fontFamily: theme.fontFamily.medium,
     fontSize: theme.fontSize.sm,
+  },
+  pressed: {
+    opacity: 0.9,
   },
 }));
 
