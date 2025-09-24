@@ -1,7 +1,7 @@
 declare global {
   type RootStackParamList = {
     home: undefined;
-    newMeal: undefined;
+    newMeal: undefined | { dayOfWeek: string };
   };
 
   type StackRoutesProps<T extends keyof RootStackParamList> = {
@@ -10,7 +10,12 @@ declare global {
         screen: keyof RootStackParamList,
         params?: RootStackParamList[keyof RootStackParamList]
       ) => void;
+      goBack: () => void;
     };
+    route: {
+      params?: RootStackParamList[T];
+    };
+    go;
   };
 }
 

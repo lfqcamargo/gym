@@ -16,11 +16,13 @@ export const styles = createThemedStyles((theme) => ({
     justifyContent: "space-between",
     marginBottom: 12,
   },
+
   title: {
     fontSize: theme.fontSize.lg,
     fontFamily: theme.fontFamily.bold,
     color: theme.colors.gray[700],
   },
+
   buttonWrapper: {
     width: 128,
   },

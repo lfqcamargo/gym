@@ -5,14 +5,21 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { styles } from "./styles";
 import foodData from "../../../assets/foods.json";
 import type { Food } from "@/@types/foods";
 import { Button } from "@/components/Button";
 import { NutritionTable } from "@/components/NutritionTable";
+import { DayPhill } from "@/components/DayPhill";
+import { Header } from "@/components/Header";
+import { Label } from "@/components/Label";
 
-export function NewMeal() {
+export function NewMeal({ navigation, route }: StackRoutesProps<"newMeal">) {
+  const [selectedDay, setSelectedDay] = useState<string>(
+    route.params?.dayOfWeek ?? "Seg"
+  );
   const [foods, setFoods] = useState<Food[]>([]);
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [query, setQuery] = useState("");
@@ -40,8 +47,33 @@ export function NewMeal() {
 
   return (
     <View style={styles.container}>
+      <Header
+        title={"Nova Refeição"}
+        navigate={{ icon: "left", onPress: () => navigation.goBack() }}
+      />
+
       <View>
-        <Text style={styles.label}>Nome da comida</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 6,
+            paddingHorizontal: 16,
+          }}
+        >
+          {["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"].map((day) => (
+            <DayPhill
+              key={day}
+              label={day}
+              selected={selectedDay === day ? "true" : "false"}
+              onPress={setSelectedDay}
+            />
+          ))}
+        </ScrollView>
+      </View>
+
+      <View>
+        <Label>Nome da comida</Label>
         <TextInput
           style={styles.input}
           placeholder="Ex.: Arroz"
@@ -81,7 +113,7 @@ export function NewMeal() {
       </View>
 
       <View>
-        <Text style={styles.label}>Descrição</Text>
+        <Label>Descrição</Label>
         <TextInput
           style={[styles.input, styles.textarea]}
           placeholder="Detalhes, preparo, observações..."
@@ -92,7 +124,7 @@ export function NewMeal() {
 
       <View style={styles.row}>
         <View style={styles.flex1}>
-          <Text style={styles.label}>Quantidade(g)</Text>
+          <Label>Quantidade(g)</Label>
           <TextInput
             style={styles.input}
             placeholder="100"
@@ -101,7 +133,7 @@ export function NewMeal() {
         </View>
 
         <View style={styles.flex1}>
-          <Text style={styles.label}>Hora</Text>
+          <Label>Hora</Label>
           <TextInput
             style={styles.input}
             placeholder="12:00"
@@ -109,6 +141,7 @@ export function NewMeal() {
           />
         </View>
       </View>
+
       <View>
         <NutritionTable
           item={{

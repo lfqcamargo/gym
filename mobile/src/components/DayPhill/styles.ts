@@ -2,8 +2,8 @@ import { createThemedStyles } from "@/theme/global";
 
 const baseStyles = createThemedStyles((theme) => ({
   container: {
-    height: 48,
-    padding: 12,
+    height: 46,
+    padding: 10,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: theme.border.borderRadius.full,
@@ -27,6 +27,7 @@ const selecteds = createThemedStyles((theme) => ({
       color: theme.colors.zinc[700],
     },
   },
+
   true: {
     container: {
       backgroundColor: theme.colors.green[600],

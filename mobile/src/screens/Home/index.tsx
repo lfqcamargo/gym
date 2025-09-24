@@ -46,7 +46,7 @@ export function Home({ navigation }: StackRoutesProps<"home">) {
 
       <ScrollView style={{ flex: 1, padding: 16 }}>
         {foods.map((food) => (
-          <Text key={food.id} style={{ marginVertical: 4 }}>
+          <Text key={food.Id} style={{ marginVertical: 4 }}>
             • {food["Descrição dos alimentos"]}
           </Text>
         ))}
@@ -56,7 +56,9 @@ export function Home({ navigation }: StackRoutesProps<"home">) {
           <View style={styles.buttonWrapper}>
             <Button
               variant="primary"
-              onPress={() => navigation.navigate("newMeal")}
+              onPress={() =>
+                navigation.navigate("newMeal", { dayOfWeek: selectedDay })
+              }
             >
               Nova
             </Button>
