@@ -1,49 +1,43 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React from "react";
+import { View, ScrollView } from "react-native";
 import { styles } from "./styles";
-import foodData from "../../../assets/foods.json";
-import type { Food } from "@/@types/foods";
 import { Button } from "@/components/Button";
 import { NutritionTable } from "@/components/NutritionTable";
 import { DayPhill } from "@/components/DayPhill";
 import { Header } from "@/components/Header";
 import { Label } from "@/components/Label";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { mealSchema, MealFormData } from "./lib/mealSchema";
+import { Input } from "@/components/Input";
+import { FoodInput } from "@/components/FoodInput";
+import { TimePickerField } from "@/components/TimeInput";
+
+type DayOfWeek = "Seg" | "Ter" | "Qua" | "Qui" | "Sex" | "Sab" | "Dom";
 
 export function NewMeal({ navigation, route }: StackRoutesProps<"newMeal">) {
-  const [selectedDay, setSelectedDay] = useState<string>(
-    route.params?.dayOfWeek ?? "Seg"
-  );
-  const [foods, setFoods] = useState<Food[]>([]);
-  const [selectedFood, setSelectedFood] = useState<Food | null>(null);
-  const [query, setQuery] = useState("");
-  const [filtered, setFiltered] = useState<Food[]>([]);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<MealFormData>({
+    resolver: zodResolver(mealSchema),
+    defaultValues: {
+      dayOfWeek: (route.params?.dayOfWeek as DayOfWeek) ?? "Seg",
+      food: "",
+      description: "",
+      quantity: 0,
+      time: "",
+      foodId: undefined,
+    },
+  });
 
-  useEffect(() => {
-    setFoods(foodData as Food[]);
-  }, []);
-
-  useEffect(() => {
-    if (
-      query.trim() === "" ||
-      selectedFood?.["Descrição dos alimentos"] === query
-    ) {
-      setFiltered([]);
-    } else {
-      const q = query.toLowerCase();
-      setFiltered(
-        foods.filter((f) =>
-          f["Descrição dos alimentos"].toLowerCase().includes(q)
-        )
-      );
-    }
-  }, [query, foods, selectedFood]);
+  function onSubmit(data: MealFormData) {
+    console.log("Form data:", data.foodId);
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
@@ -52,96 +46,76 @@ export function NewMeal({ navigation, route }: StackRoutesProps<"newMeal">) {
         navigate={{ icon: "left", onPress: () => navigation.goBack() }}
       />
 
+      {/* Dias da semana */}
       <View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            gap: 6,
-            paddingHorizontal: 16,
-          }}
+          contentContainerStyle={{ gap: 6, paddingHorizontal: 16 }}
         >
           {["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"].map((day) => (
             <DayPhill
               key={day}
               label={day}
-              selected={selectedDay === day ? "true" : "false"}
-              onPress={setSelectedDay}
+              selected={watch("dayOfWeek") === day ? "true" : "false"}
+              onPress={() => setValue("dayOfWeek", day as DayOfWeek)}
             />
           ))}
         </ScrollView>
       </View>
 
+      {/* Nome do alimento */}
       <View>
-        <Label>Nome da comida</Label>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex.: Arroz"
-          value={query}
-          onChangeText={setQuery}
+        <Label>Nome do Alimento</Label>
+        <FoodInput
+          value={watch("food")}
+          onChangeValue={(val) => setValue("food", val)}
+          onSelectFood={(food) => {
+            setValue("foodId", food.Id);
+          }}
+          error={errors.food?.message}
         />
-
-        {filtered.length > 0 && (
-          <View style={styles.dropdown}>
-            <FlatList
-              data={filtered}
-              keyExtractor={(item) => String(item["Id"])}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedFood(item);
-                    setQuery(item["Descrição dos alimentos"]);
-                    setFiltered([]);
-                  }}
-                >
-                  <View style={styles.item}>
-                    <Text style={styles.itemTitle}>
-                      {item["Descrição dos alimentos"]}
-                    </Text>
-                    <Text style={styles.itemSubtitle}>
-                      Categoria: {item["Categoria do alimento"]}
-                    </Text>
-                    <Text style={styles.itemSubtitle}>
-                      Energia: {item["Energia/kcal"]} kcal
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        )}
       </View>
 
+      {/* Descrição */}
       <View>
         <Label>Descrição</Label>
-        <TextInput
+        <Input
           style={[styles.input, styles.textarea]}
           placeholder="Detalhes, preparo, observações..."
           multiline
           textAlignVertical="top"
+          value={watch("description")}
+          onChangeText={(val) => setValue("description", val)}
+          error={errors.description?.message}
         />
       </View>
 
-      <View style={styles.row}>
-        <View style={styles.flex1}>
-          <Label>Quantidade(g)</Label>
-          <TextInput
-            style={styles.input}
-            placeholder="100"
-            placeholderTextColor={theme.colors.gray[300]}
-          />
-        </View>
+      {/* Quantidade e hora */}
+      <View>
+        <View style={styles.row}>
+          <View style={styles.flex1}>
+            <Label>Quantidade(g)</Label>
+            <Input
+              placeholder="100"
+              value={String(watch("quantity"))}
+              onChangeText={(val) => {
+                const parsed = Number(val);
+                setValue("quantity", isNaN(parsed) ? 0 : parsed);
+              }}
+              keyboardType="numeric"
+              error={errors.quantity?.message}
+            />
+          </View>
 
-        <View style={styles.flex1}>
-          <Label>Hora</Label>
-          <TextInput
-            style={styles.input}
-            placeholder="12:00"
-            placeholderTextColor={theme.colors.gray[300]}
-          />
+          <View style={styles.flex1}>
+            <Label>Hora</Label>
+            <TimePickerField control={control} />
+          </View>
         </View>
       </View>
 
+      {/* Tabela nutricional placeholder */}
       <View>
         <NutritionTable
           item={{
@@ -157,8 +131,9 @@ export function NewMeal({ navigation, route }: StackRoutesProps<"newMeal">) {
         />
       </View>
 
+      {/* Botão */}
       <View style={styles.footer}>
-        <Button>Salvar</Button>
+        <Button onPress={handleSubmit(onSubmit)}>Salvar</Button>
       </View>
     </View>
   );

@@ -4,18 +4,8 @@ export const styles = createThemedStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.gray[50],
-    gap: 18,
-    padding: 4,
-  },
-
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-
-  form: {
-    gap: 16,
+    gap: 12,
+    padding: 2,
   },
 
   label: {
@@ -33,6 +23,10 @@ export const styles = createThemedStyles((theme) => ({
     height: 48,
     paddingHorizontal: 16,
     fontSize: theme.fontSize.md,
+  },
+
+  inputError: {
+    borderColor: theme.colors.red[500],
   },
 
   textarea: {
@@ -68,35 +62,5 @@ export const styles = createThemedStyles((theme) => ({
 
   footer: {
     marginTop: "auto",
-  },
-
-  item: {
-    padding: 12,
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.border.borderRadius.xl,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.gray[200],
-  },
-  itemTitle: {
-    fontSize: theme.fontSize.md,
-    fontFamily: theme.fontFamily.bold,
-    color: theme.colors.gray[700],
-  },
-  itemSubtitle: {
-    fontSize: theme.fontSize.sm,
-    color: theme.colors.gray[400],
-  },
-
-  dropdown: {
-    position: "absolute",
-    top: 50,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    maxHeight: 200,
-    zIndex: 1000,
   },
 }));

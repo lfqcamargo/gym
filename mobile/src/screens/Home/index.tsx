@@ -16,8 +16,8 @@ export function Home({ navigation }: StackRoutesProps<"home">) {
   }, [selectedDay]);
 
   async function loadFoods() {
-    const data = await loadFoodsByDay(selectedDay);
-    setFoods(data);
+    // const data = await loadFoodsByDay(selectedDay);
+    // setFoods(data);
   }
 
   return (
